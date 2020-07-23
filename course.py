@@ -27,7 +27,13 @@ class Course():
         self.grade = lis[3]
         self._type = lis[4]
         self.sem = lis[5]
-    
+
     def formatted_str(self):
         return Formatter.course_row(self._id, self.name, self.credit,
                                     self.grade, self._type, self.sem)
+
+    def is_bixian(self) -> bool:
+        return self._type == '必修' or self._type == '限选'
+
+    def is_renxuan(self) -> bool:
+        return self._type == '任选'

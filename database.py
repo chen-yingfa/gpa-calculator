@@ -11,28 +11,54 @@ class Database():
     def get_courses_bixian(self):
         _courses = []
         for c in self.courses:
-            if c._type == '必修' or c._type == '限选':
+            if c.is_bixian():
                 _courses.append(c)
         return _courses
-    
+
     def get_courses_renxuan(self):
         _courses = []
         for c in self.courses:
-            if c._type == '任选':
+            if c.is_renxuan():
                 _courses.append(c)
         return _courses
 
     def show_all(self):
         Database.print_courses(self.courses)
 
+    def get_cred_bixian(self):
+        cred = 0
+        for c in self.courses:
+            if c.is_bixian():
+                cred += c.credit
+        return cred
+
+    def get_cred_renxuan(self):
+        cred = 0
+        for c in self.courses:
+            if c.is_renxuan():
+                cred += c.credit
+        return cred
+
+    def get_cred(self) -> tuple:
+        # 返回总学分
+        bixian_cred = self.get_cred_bixian()
+        renxuan_cred = self.get_cred_renxuan()
+        return bixian_cred, renxuan_cred
+
     def print_gpa(self):
         '''
         输出各种 GPA
         '''
+        cred_bixian, cred_renxuan = self.get_cred()
         gpa_all = (self.get_gpa(), self.get_gpa(new_method=True))
         gpa_bixian = (self.get_gpa_bixian(), self.get_gpa_bixian(new_method=True))
         gpa_renxuan = (self.get_gpa_renxuan(), self.get_gpa_renxuan(new_method=True))
-        s = f'''      旧算法  新算法
+        s = f'''
+  总学分：{cred_bixian + cred_renxuan}
+必限学分：{cred_bixian}
+任选学分：{cred_renxuan}
+
+      旧算法  新算法
 所有  {gpa_all[0]    :.4f}  {gpa_all[1]    :.4f}
 必限  {gpa_bixian[0] :.4f}  {gpa_bixian[1] :.4f}
 任选  {gpa_renxuan[0]:.4f}  {gpa_renxuan[1]:.4f}'''
