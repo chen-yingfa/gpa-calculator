@@ -1,6 +1,8 @@
-# misc
+# personal information
 allcourses.csv
 allcourses.xlsx
 data/all.csv
+
+# misc
 .vscode
 __pycache__
