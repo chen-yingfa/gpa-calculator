@@ -5,11 +5,11 @@ class Course():
     def __init__(self, _id: int = -1, name: str = "无", credit: int = 0,
                  grade: str = 'F', _type: str = '必修', sem: str = '0000-0000-0'):
         self._id = _id
-        self.name = name
+        self.name = name.strip()
         self.credit = credit
-        self.grade = grade.upper()
-        self._type = _type
-        self.sem = sem
+        self.grade = grade.strip().upper()
+        self._type = _type.strip()
+        self.sem = sem.strip()
 
     def __repr__(self):
         return self.formatted_str()
@@ -37,3 +37,12 @@ class Course():
 
     def is_renxuan(self) -> bool:
         return self._type == '任选'
+
+    def is_pf(self):
+        return self.grade in ['F', 'P']
+
+    def is_w(self):
+        return self.grade == 'W'
+
+    def is_pf_or_w(self):
+        return self.is_pf() or self.is_w()

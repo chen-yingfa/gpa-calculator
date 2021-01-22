@@ -39,32 +39,52 @@ def main_menu():
     db = Database()
 
     while True:
-        print("指令: new/save/load/add/gpa/show/exit")
-        cmd = input()
-        if cmd == 'add':
+        print("""< 请输入指令 >
+load： 载入数据
+gpa：  显示 GPA 信息
+show： 显示所有课程
+graph：显示 GPA 随学期的变化
+cred： 显示学分
+exit： 退出
+
+< 以下 3 个指令不建议使用 >
+save： 保存
+new：  新建
+add：  添加""")
+        cmd = input(">>> ").split()
+        if cmd[0] == 'add':
             course = prompt_course()
             print('获得', course)
             print("确定添加? [y/n]（或者[s/b]）")
             confirm = utils.promptyesno()
             if confirm:
                 db.add_course(course)
-        elif cmd == 'new':
+        elif cmd[0] == 'new':
             db.clear()
-        elif cmd == 'gpa':
+        elif cmd[0] == 'gpa':
             db.print_gpa()
-        elif cmd == 'gpanew':
+        elif cmd[0] == 'gpanew':
             print("GPA (new):", db.get_gpa(new_method=True))
-        elif cmd == 'show':
-            db.show_all()
-        elif cmd == 'save':
+        elif cmd[0] == 'show':
+            if len(cmd) == 1:
+                db.show_all()
+            elif cmd[1] == 'renxuan':
+                db.show_renxuan()
+            elif cmd[1] == 'bixian':
+                db.show_bixian()
+        elif cmd[0] == 'save':
             fname = input("文件名（略去格式）：")
             path = "./data/{}.csv".format(fname)
             db.save(path)
-        elif cmd == 'load':
+        elif cmd[0] == 'load':
             fname = input("文件名（略去格式）：")
             path = "./data/{}.csv".format(fname)
             db.load(path)
-        elif cmd == 'exit':  # 退出程序
+        elif cmd[0] == 'graph':
+            db.graph()
+        elif cmd[0] == 'cred':
+            db.print_cred()
+        elif cmd[0] == 'exit':  # 退出程序
             break
 
 

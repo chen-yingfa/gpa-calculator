@@ -2,6 +2,7 @@
 allcourses.csv
 allcourses.xlsx
 data/all.csv
+*.png
 
 # misc
 .vscode
