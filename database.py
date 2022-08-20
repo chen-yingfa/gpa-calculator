@@ -84,8 +84,11 @@ class Database():
         print(s)
 
     def graph(self):
-        sem_to_gpa = self.get_gpa_all_sem()
-        sem_to_gpa_new = self.get_gpa_all_sem(new_method=True)
+        # sem_to_gpa = self.get_gpa_all_sem()
+        # sem_to_gpa_new = self.get_gpa_all_sem(new_method=True)
+        sem_to_gpa = self.get_cumulative_gpa_all_sem()
+        sem_to_gpa_new = self.get_cumulative_gpa_all_sem(new_method=True)
+        
         gpa = list(sem_to_gpa.values())
         gpa_new = list(sem_to_gpa_new.values())
         plt.plot(gpa[1:], label="Old GPA")
@@ -123,19 +126,36 @@ class Database():
         _c = [c for c in self.courses if c.sem == sem]
         return Database.calc_gpa(_c, new_method=new_method)
 
-    def get_gpa_all_sem(self, new_method=False) -> dict:
-        '''
-        return: dict of all with semester as key, and gpa as value
-        '''
+    def get_sem_to_courses(self) -> list:
+        '''Return dictionary where semester (str) are the keys, list of courses is the values.'''
         sem_to_courses = {}
         for c in self.courses:
             if c.sem not in sem_to_courses:
                 sem_to_courses[c.sem] = []
             sem_to_courses[c.sem].append(c)
+        return sem_to_courses
+
+    def get_gpa_all_sem(self, new_method=False) -> dict:
+        '''
+        return: dict of all with semester as key, and gpa as value
+        '''
+        sem_to_courses = self.get_sem_to_courses()
         sem_to_gpa = {}
         for sem, courses in sem_to_courses.items():
             sem_to_gpa[sem] = Database.calc_gpa(courses, new_method=new_method)
         return sem_to_gpa
+
+    def get_cumulative_gpa_all_sem(self, new_method=False):
+        sem_to_courses = self.get_sem_to_courses()
+        sem_to_gpa_cumulative = {}
+        for sem in sem_to_courses:
+            # Compute gpa up until current semester
+            courses = []
+            for s in sem_to_courses:
+                if s <= sem:
+                    courses += sem_to_courses[s]
+            sem_to_gpa_cumulative[sem] = Database.calc_gpa(courses, new_method=new_method)
+        return sem_to_gpa_cumulative
 
     def add_course(self, course: Course):
         course.id = len(self.courses)    # O(1)
@@ -144,7 +164,7 @@ class Database():
     def save(self, path: str):
         print("saving...")
         with open(path, 'w', encoding='utf-8') as f:
-            writer = csv.writer(f)
+            writer = csv.writer(f, delimiter='\t')
             for c in self.courses:
                 lis = c.to_list()
                 print(lis)
@@ -155,7 +175,7 @@ class Database():
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 print("reading...")
-                reader = csv.reader(f)
+                reader = csv.reader(f, delimiter='\t')
                 self.courses = []
                 for row in reader:
                     print(row)

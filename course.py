@@ -9,7 +9,7 @@ class Course():
         self.credit = credit
         self.grade = grade.strip().upper()
         self._type = _type.strip()
-        self.sem = sem.strip()
+        self.sem: str = sem.strip()  # ....-....-.
 
     def __repr__(self):
         return self.formatted_str()
@@ -38,11 +38,11 @@ class Course():
     def is_renxuan(self) -> bool:
         return self._type == '任选'
 
-    def is_pf(self):
+    def is_pf(self) -> bool:
         return self.grade in ['F', 'P']
 
-    def is_w(self):
+    def is_w(self) -> bool:
         return self.grade == 'W'
 
-    def is_pf_or_w(self):
+    def is_pf_or_w(self) -> bool:
         return self.is_pf() or self.is_w()

@@ -51,40 +51,40 @@ exit： 退出
 save： 保存
 new：  新建
 add：  添加""")
-        cmd = input(">>> ").split()
-        if cmd[0] == 'add':
+        cmd = input(">>> ")
+        if cmd == 'add':
             course = prompt_course()
             print('获得', course)
             print("确定添加? [y/n]（或者[s/b]）")
             confirm = utils.promptyesno()
             if confirm:
                 db.add_course(course)
-        elif cmd[0] == 'new':
+        elif cmd == 'new':
             db.clear()
-        elif cmd[0] == 'gpa':
+        elif cmd == 'gpa':
             db.print_gpa()
-        elif cmd[0] == 'gpanew':
+        elif cmd == 'gpanew':
             print("GPA (new):", db.get_gpa(new_method=True))
-        elif cmd[0] == 'show':
+        elif cmd == 'show':
             if len(cmd) == 1:
                 db.show_all()
             elif cmd[1] == 'renxuan':
                 db.show_renxuan()
             elif cmd[1] == 'bixian':
                 db.show_bixian()
-        elif cmd[0] == 'save':
+        elif cmd == 'save':
             fname = input("文件名（略去格式）：")
             path = "./data/{}.csv".format(fname)
             db.save(path)
-        elif cmd[0] == 'load':
+        elif cmd == 'load':
             fname = input("文件名（略去格式）：")
-            path = "./data/{}.csv".format(fname)
+            path = "./data/{}.tsv".format(fname)
             db.load(path)
-        elif cmd[0] == 'graph':
+        elif cmd == 'graph':
             db.graph()
-        elif cmd[0] == 'cred':
+        elif cmd == 'cred':
             db.print_cred()
-        elif cmd[0] == 'exit':  # 退出程序
+        elif cmd == 'exit':  # 退出程序
             break
 
 
